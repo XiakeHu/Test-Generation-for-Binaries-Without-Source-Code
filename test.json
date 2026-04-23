@@ -1,0 +1,72 @@
+{
+  "Path": {
+     "base": {
+      "linux": "********",
+      "windows": "********",
+      "ida": "********",
+      "input": "********"
+    },
+    "log" : {
+      "linux":"********",
+      "windows":"********"
+    },
+    "output" : {
+
+    }
+  },
+  "Models":{
+    "doubao":{
+      "model": "doubao-seed-2-0-pro-260215",
+      "base_url": "https://ark.cn-beijing.volces.com/api/v3",
+      "api_key": ["********"],
+      "max_tokens": 8192
+    },
+    "deepseek":{
+      "model": "deepseek-chat",
+      "base_url": "https://api.deepseek.com/beta",
+      "api_key": [
+        "********",
+        "********"
+      ],
+      "max_tokens": 8192
+    },
+    "qwenplus":{
+      "model": "Qwen/Qwen2.5-Coder-32B-Instruct",
+      "base_url": "https://api.siliconflow.cn/v1",
+      "api_key": [
+        "********"
+      ],
+      "max_tokens": 8192
+    },
+    "chatgpt":{
+      "model": "gpt-5.4-2026-03-05",
+      "base_url": "*",
+      "api_key": [
+        "********"
+      ],
+      "max_tokens": 8192
+    },
+    "gitee": {
+      "model": "bge-m3",
+      "base_url": "********",
+      "api_key": ["********"]
+    },
+    "gemini": {
+      "model": "gemini-3.1-flash-lite-preview-thinking-medium",
+      "base_url": "*",
+      "api_key": [
+        "********"
+      ],
+      "max_tokens": 8192
+    }
+  },
+  "Prompts": {
+    "correct": {
+      "pre": "/* 代码修正任务 */\n                    1. **核心要求**：\n                       - 根据全局架构上下文重构以下函数代码,注意：仅修正该函数本身，不要添加其他任何函数\n                       - 移除所有IDA特有语法（如 __fastcall、[ebp+X] ,__int64等）\n                       - 不要根据函数作用修改函数名\n                       - 确保所有函数参数使用typedef定义的类型\n                       - 不接收任何命令行参数\n                       - 函数返回值必须与声明一致",
+      "suffix": "5. **输出要求**：\n                           - 仅返回标准C代码\n                           - 禁止包含解释性文字\n                           - 仅修正该函数本身，不要修改函数名，把该函数中调用的其他函数(依赖函数中已给出)全部当做已声明(调用的函数的传入参数与依赖函数中的定义保持一致),\n                           不要重复声明，不要添加其他任何函数!!\n                           - 代码中用到的全局变量全部已定义，不要重复定义！！\n                           - 依赖的函数已给出，调用依赖函数时要根据给出的代码调用，传参与依赖函数的定义保持一致！\n                        /* 示例转换 */\n\n                        // 原始代码：\n    '''\n                        int __fastcall displayAllBooks(__int64 a1) {{\n                              int result; // eax\n                              int i; // [rsp+1Ch] [rbp-4h]\n\n                              if ( !*(_DWORD *)(a1 + 20800) )\n                                return puts(aA_8);\n                              for ( i = 0; ; ++i )\n                              {{\n                                result = *(_DWORD *)(a1 + 20800);\n                                if ( i >= result )\n                                  break;\n                                printf(aA_4, *(unsigned int *)(a1 + 208LL * i + 200));\n                                printf(aA_5, a1 + 208LL * i);\n                                printf(aA_6, 208LL * i + 96 + a1 + 4);\n                                printf(aA_7, *(float *)(a1 + 208LL * i + 204));\n                                puts(\"------------------------\");\n                              }}\n                              return result;\n                            }}\n\n\n                        // 转换后：\n                        void displayAllBooks(Library *lib) {{\n                    if (lib->count == 0) {{\n                        printf(\"图书馆暂无图书。\\n\");\n                        return;\n                    }}\n                    for (int i = 0; i < lib->count; i++) {{\n                        printf(\"图书 ID: %d\\n\", lib->books[i].id);\n                        printf(\"图书标题: %s\\n\", lib->books[i].title);\n                        printf(\"图书作者: %s\\n\", lib->books[i].author);\n                        printf(\"图书价格: %.2f\\n\", lib->books[i].price);\n                        printf(\"------------------------\\n\");\n                    }}\n                }}"
+    },
+    "change": {
+      "suffix": "请简洁明了地说明主要修改点和原因，并按照以下分类方法标识错误类型：\n\n    编译错误分类:\n    1. 编译时错误\n       a. 预处理错误 - 头文件未找到、宏定义错误、条件编译语法错误\n       b. 词法错误 - 非法字符、未闭合的字符串、非法转义字符、无效的标识符\n       c. 语法错误 - 缺少分号、括号不匹配、关键字拼写错误、表达式语法错误、缩进错误\n       d. 语义错误 - 未声明的标识符使用、重复声明、类型不兼容、函数参数错误、函数返回值错误、访问权限错误、常量修改错误\n\n    2. 链接时错误\n       a. 未定义的引用\n       b. 重复定义\n       c. 库文件未找到\n       d. 库版本不兼容\n       e. 符号冲突\n\n    3. 非编译错误\n       a. 运行时错误\n       b. 逻辑错误\n       c. 警告\n\n    请在回答开头使用以下格式标识错误类型:\n    [错误分类]编译时错误-语法错误-缺少分号,\n    [错误分类]链接时错误-未定义的引用\n\n    然后简要解释修改原因（重点说明解决方法）。"
+    }
+  }
+}

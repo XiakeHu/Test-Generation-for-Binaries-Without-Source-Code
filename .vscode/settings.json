@@ -1,0 +1,6 @@
+{
+    "unittestbot.paths.sourceDirectories": ".,fake_libc_include,fake_libc_include/X11,fake_libc_include/arpa,fake_libc_include/asm-generic,fake_libc_include/linux,fake_libc_include/mir_toolkit,fake_libc_include/net,fake_libc_include/netinet,fake_libc_include/openssl,fake_libc_include/sys,fake_libc_include/xcb",
+    "python-envs.defaultEnvManager": "ms-python.python:conda",
+    "python-envs.defaultPackageManager": "ms-python.python:conda",
+    "python-envs.pythonProjects": []
+}
